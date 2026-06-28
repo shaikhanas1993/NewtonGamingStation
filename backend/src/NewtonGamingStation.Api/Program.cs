@@ -13,11 +13,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
-// Composition root: each layer registers its own services.
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
 
-// CORS so the Angular dev server / nginx container can call the API.
+// In "Testing", the factory supplies its own SQLite DbContext — registering
+// SQL Server here would cause a dual-provider conflict. Repositories are still
+// needed, so only those are registered. Every other environment gets the full stack.
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddInfrastructureRepositories();
+}
+else
+{
+    builder.Services.AddInfrastructure(builder.Configuration);
+}
+
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins").Get<string[]>()
     ?? new[] { "http://localhost:4200", "http://localhost:8080" };
@@ -31,11 +40,8 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
-{
     app.MapOpenApi();
-}
 
-// Apply migrations and seed data unless explicitly disabled (e.g. during tests).
 if (app.Configuration.GetValue("Database:AutoMigrate", true))
 {
     using var scope = app.Services.CreateScope();
@@ -49,5 +55,4 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 app.Run();
 
-// Exposed so the integration test project can reference the entry point via WebApplicationFactory.
 public partial class Program { }

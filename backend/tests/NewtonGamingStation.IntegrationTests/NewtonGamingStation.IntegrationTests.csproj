@@ -18,8 +18,11 @@
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\NewtonGamingStation.Api\NewtonGamingStation.Api.csproj" />
-  </ItemGroup>
+ <!-- After -->
+<ItemGroup>
+  <ProjectReference Include="..\..\src\NewtonGamingStation.Api\NewtonGamingStation.Api.csproj" />
+  <ProjectReference Include="..\..\src\NewtonGamingStation.Application\NewtonGamingStation.Application.csproj" />
+  <ProjectReference Include="..\..\src\NewtonGamingStation.Infrastructure\NewtonGamingStation.Infrastructure.csproj" />
+</ItemGroup>
 
 </Project>
