@@ -1,0 +1,54 @@
+<div class="row g-2 align-items-end">
+  <div class="col-sm-3">
+    <label class="form-label small mb-1">Genre</label>
+    <select
+      class="form-select"
+      [value]="genreValue()"
+      (change)="onGenre($any($event.target).value)"
+    >
+      <option value="">All genres</option>
+      @for (g of genres; track g.value) {
+      <option [value]="g.value">{{ g.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="col-sm-3">
+    <label class="form-label small mb-1">Publisher</label>
+    <select
+      class="form-select"
+      [value]="publisherValue()"
+      (change)="onPublisher($any($event.target).value)"
+    >
+      <option value="">All publishers</option>
+      @for (p of publishers(); track p.id) {
+      <option [value]="p.id">{{ p.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="col-sm-3">
+    <label class="form-label small mb-1">Sort by</label>
+    <select
+      class="form-select"
+      [value]="sortBy()"
+      (change)="onSort($any($event.target).value)"
+    >
+      <option value="title">Title</option>
+      <option value="price">Price</option>
+      <option value="releaseDate">Release date</option>
+    </select>
+  </div>
+
+  <div class="col-sm-3">
+    <label class="form-label small mb-1">Direction</label>
+    <select
+      class="form-select"
+      [value]="descValue()"
+      (change)="onDesc($any($event.target).value)"
+    >
+      <option value="false">Ascending</option>
+      <option value="true">Descending</option>
+    </select>
+  </div>
+</div>

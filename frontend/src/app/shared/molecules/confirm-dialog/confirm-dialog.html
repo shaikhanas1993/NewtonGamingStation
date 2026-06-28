@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ title }}</h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body">
+  <p class="mb-0">{{ message }}</p>
+</div>
+<div class="modal-footer">
+  <ngs-button variant="outline-secondary" (clicked)="modal.dismiss()"
+    >Cancel</ngs-button
+  >
+  <ngs-button variant="danger" (clicked)="modal.close(true)"
+    >{{ confirmLabel }}</ngs-button
+  >
+</div>

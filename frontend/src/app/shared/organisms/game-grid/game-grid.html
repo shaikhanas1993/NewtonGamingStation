@@ -1,0 +1,27 @@
+@if (loading()) {
+<ngs-spinner label="Loading games…" />
+} @else if (games().length === 0) {
+<div class="alert alert-info text-center my-4" role="alert">
+  No games match your search. Try clearing the filters or
+  <a routerLink="/games/new">add a new game</a>.
+</div>
+} @else {
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+  @for (game of games(); track game.id) {
+  <div class="col">
+    <ngs-game-card
+      [game]="game"
+      (edit)="edit.emit($event)"
+      (remove)="remove.emit($event)"
+    />
+  </div>
+  }
+</div>
+
+<ngs-pagination
+  [page]="page()"
+  [pageSize]="pageSize()"
+  [totalItems]="totalItems()"
+  (pageChange)="pageChange.emit($event)"
+/>
+}

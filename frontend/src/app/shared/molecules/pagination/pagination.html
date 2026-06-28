@@ -1,0 +1,13 @@
+@if (totalItems() > pageSize()) {
+<div class="d-flex justify-content-center mt-4">
+  <ngb-pagination
+    [collectionSize]="totalItems()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [maxSize]="5"
+    [rotate]="true"
+    [boundaryLinks]="true"
+    (pageChange)="pageChange.emit($event)"
+  />
+</div>
+}

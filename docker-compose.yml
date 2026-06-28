@@ -1,0 +1,58 @@
+# NewtonGamingStation - full stack for macOS (Apple Silicon & Intel).
+# Azure SQL Edge is used as the SQL Server engine because it ships native arm64
+# images, so it runs without emulation on Apple Silicon Macs.
+#
+#   docker compose up --build
+#
+# Frontend:  http://localhost:8080
+# API:       http://localhost:5080  (Swagger/OpenAPI at /openapi/v1.json)
+# Database:  localhost,1433  (sa / Your_strong_Pass123)
+
+services:
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: ngs-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Your_strong_Pass123"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ngs-db-data:/var/opt/mssql
+    healthcheck:
+      # Azure SQL Edge listens on 1433 once ready; a TCP probe avoids depending
+      # on sqlcmd tooling being present in the image.
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/localhost/1433' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ngs-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=NewtonGamingStation;User Id=sa;Password=Your_strong_Pass123;TrustServerCertificate=True;Encrypt=False"
+      Cors__AllowedOrigins__0: "http://localhost:8080"
+    ports:
+      - "5080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ngs-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  ngs-db-data:

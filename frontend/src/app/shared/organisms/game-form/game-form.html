@@ -1,0 +1,101 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="mb-3">
+    <label class="form-label" for="title">Title</label>
+    <input
+      id="title"
+      class="form-control"
+      formControlName="title"
+      [class.is-invalid]="isInvalid('title')"
+    />
+    <div class="invalid-feedback">A title (max 200 chars) is required.</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="description">Description</label>
+    <textarea
+      id="description"
+      rows="3"
+      class="form-control"
+      formControlName="description"
+    ></textarea>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label" for="genre">Genre</label>
+      <select id="genre" class="form-select" formControlName="genre">
+        @for (g of genres; track g.value) {
+        <option [value]="g.value">{{ g.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label class="form-label" for="platform">Platform</label>
+      <input
+        id="platform"
+        class="form-control"
+        formControlName="platform"
+        [class.is-invalid]="isInvalid('platform')"
+      />
+      <div class="invalid-feedback">Platform is required.</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label class="form-label" for="price">Price</label>
+      <input
+        id="price"
+        type="number"
+        step="0.01"
+        min="0"
+        class="form-control"
+        formControlName="price"
+        [class.is-invalid]="isInvalid('price')"
+      />
+      <div class="invalid-feedback">Price must be zero or more.</div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <label class="form-label" for="releaseDate">Release date</label>
+      <input
+        id="releaseDate"
+        type="date"
+        class="form-control"
+        formControlName="releaseDate"
+        [class.is-invalid]="isInvalid('releaseDate')"
+      />
+      <div class="invalid-feedback">Release date is required.</div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <label class="form-label" for="publisherId">Publisher</label>
+      <select
+        id="publisherId"
+        class="form-select"
+        formControlName="publisherId"
+        [class.is-invalid]="isInvalid('publisherId')"
+      >
+        <option [ngValue]="null" disabled>Select a publisher…</option>
+        @for (p of publishers(); track p.id) {
+        <option [ngValue]="p.id">{{ p.name }}</option>
+        }
+      </select>
+      <div class="invalid-feedback">Please choose a publisher.</div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mt-2">
+    <ngs-button type="submit" variant="primary" [disabled]="submitting()">
+      {{ submitLabel() }}
+    </ngs-button>
+    <ngs-button
+      type="button"
+      variant="outline-secondary"
+      (clicked)="cancel.emit()"
+    >
+      Cancel
+    </ngs-button>
+  </div>
+</form>

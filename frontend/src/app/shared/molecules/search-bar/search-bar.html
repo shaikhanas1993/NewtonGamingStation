@@ -1,0 +1,14 @@
+<div class="input-group">
+  <input
+    type="search"
+    class="form-control"
+    placeholder="Search games by title or description…"
+    aria-label="Search games"
+    [value]="term()"
+    (input)="onInput($any($event.target).value)"
+    (keyup.enter)="search.emit(term())"
+  />
+  <ngs-button variant="primary" (clicked)="search.emit(term())"
+    >Search</ngs-button
+  >
+</div>

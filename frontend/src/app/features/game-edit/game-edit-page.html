@@ -1,0 +1,18 @@
+<ngs-page-shell [heading]="isEdit() ? 'Edit Game' : 'Add Game'">
+  @if (loading()) {
+  <ngs-spinner label="Loading…" />
+  } @else { @if (error()) {
+  <div class="alert alert-danger" role="alert">{{ error() }}</div>
+  }
+  <div class="card card-body">
+    <ngs-game-form
+      [mode]="isEdit() ? 'edit' : 'create'"
+      [publishers]="publishers()"
+      [initialValue]="game()"
+      [submitting]="submitting()"
+      (save)="onSave($event)"
+      (cancel)="onCancel()"
+    />
+  </div>
+  }
+</ngs-page-shell>
